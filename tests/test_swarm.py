@@ -36,3 +36,12 @@ def test_mesh_consensus_calculation():
     consensus = mesh.compute_mesh_consensus()
     assert len(consensus) == 4
     assert np.isclose(np.linalg.norm(consensus), 1.0, atol=1e-6)
+
+from math_core.phase_engine import evolve_spinor_state
+
+def test_hamiltonian_spin_evolution_norm():
+    """Assert Hamiltonian spin evolution preserves unit norm over continuous time."""
+    initial = np.array([1.0, 0.0, 0.0, 0.0])
+    field = np.array([0.5, -1.2, 0.3])
+    evolved = evolve_spinor_state(initial, field, dt=1.5)
+    assert np.isclose(np.linalg.norm(evolved), 1.0, atol=1e-6)
