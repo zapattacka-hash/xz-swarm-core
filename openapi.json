@@ -1,0 +1,43 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "XZ Swarm Core Telemetry API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/status": {
+      "get": {
+        "summary": "Get Status",
+        "description": "Returns general health and active node metadata.",
+        "operationId": "get_status_status_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/consensus": {
+      "get": {
+        "summary": "Get Consensus",
+        "description": "Returns current SU(2) mesh consensus quaternion vector and norm.",
+        "operationId": "get_consensus_consensus_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -105,3 +105,15 @@ def test_byzantine_node_isolation():
     assert "node-ok" in valid
     assert "node-malicious" not in valid
     assert "node-malicious" in b_filter.quarantined_nodes
+
+from math_core.crypto_signer import TelemetrySigner
+from agent_core.auth_middleware import generate_simple_token, verify_simple_token
+
+def test_phase2_security_and_crypto():
+    signer = TelemetrySigner("test-secret")
+    payload = {"node": "alpha", "val": 1.0}
+    sig = signer.sign_payload(payload)
+    assert signer.verify_signature(payload, sig)
+
+    token = generate_simple_token("zachariah", "test-secret")
+    assert verify_simple_token(token, "test-secret")
