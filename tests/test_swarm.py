@@ -72,3 +72,19 @@ def test_hdf5_state_store_io(tmp_path):
     
     assert retrieved.shape == (1, 4)
     assert np.isclose(retrieved[0][0], 0.707, atol=1e-3)
+
+from fastapi.testclient import TestClient
+from agent_core.api_gateway import app
+
+def test_api_status_and_consensus_endpoints():
+    """Assert FastAPI endpoints return valid status and unit norm consensus."""
+    with TestClient(app) as client:
+        response_status = client.get("/status")
+        assert response_status.status_code == 200
+        assert "status" in response_status.json()
+
+        response_consensus = client.get("/consensus")
+        assert response_consensus.status_code == 200
+        data = response_consensus.json()
+        assert len(data["consensus"]) == 4
+        assert np.isclose(data["norm"], 1.0, atol=1e-6)
