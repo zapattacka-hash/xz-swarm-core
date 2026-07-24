@@ -55,3 +55,20 @@ async def test_async_daemon_execution_norm():
     await daemon.run_swarm_simulation(duration_seconds=0.1)
     consensus = daemon.mesh.compute_mesh_consensus()
     assert np.isclose(np.linalg.norm(consensus), 1.0, atol=1e-6)
+
+from math_core.state_store import H5StateStore
+
+def test_hdf5_state_store_io(tmp_path):
+    """Assert HDF5 state store correctly writes and retrieves quaternion trajectories."""
+    test_h5_file = str(tmp_path / "test_telemetry.h5")
+    store = H5StateStore(test_h5_file)
+    
+    timestamp = 1.0
+    consensus = np.array([1.0, 0.0, 0.0, 0.0])
+    nodes = {"test-node": np.array([0.707, 0.707, 0.0, 0.0])}
+    
+    store.log_snapshot(timestamp, consensus, nodes)
+    retrieved = store.load_trajectory("test-node")
+    
+    assert retrieved.shape == (1, 4)
+    assert np.isclose(retrieved[0][0], 0.707, atol=1e-3)
