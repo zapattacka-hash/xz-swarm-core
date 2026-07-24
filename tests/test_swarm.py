@@ -117,3 +117,23 @@ def test_phase2_security_and_crypto():
 
     token = generate_simple_token("zachariah", "test-secret")
     assert verify_simple_token(token, "test-secret")
+
+from agent_core.rate_limiter import TokenBucketRateLimiter
+from agent_core.audit_logger import AuditLogger
+from math_core.compressor import StateCompressor
+
+def test_phase3_rate_limiter_audit_and_compression():
+    limiter = TokenBucketRateLimiter(capacity=2, refill_rate=0.0)
+    assert limiter.consume(1) is True
+    assert limiter.consume(1) is True
+    assert limiter.consume(1) is False  # Exhausted
+
+    logger = AuditLogger()
+    h1 = logger.log_event("TEST", "Data 1")
+    h2 = logger.log_event("TEST", "Data 2")
+    assert h1 != h2
+
+    data = np.array([[1.0, 0.0, 0.0, 0.0]])
+    compressed = StateCompressor.compress_quaternion_array(data)
+    decompressed = StateCompressor.decompress_quaternion_array(compressed, 1)
+    assert np.allclose(data, decompressed)

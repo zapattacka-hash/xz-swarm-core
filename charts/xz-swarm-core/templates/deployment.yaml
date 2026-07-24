@@ -1,0 +1,19 @@
+﻿apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: xz-swarm-core
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: xz-swarm-core
+  template:
+    metadata:
+      labels:
+        app: xz-swarm-core
+    spec:
+      containers:
+      - name: xz-swarm-core
+        image: xz-swarm-core:latest
+        ports:
+        - containerPort: 8000

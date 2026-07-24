@@ -1,0 +1,6 @@
+﻿apiVersion: v2
+name: xz-swarm-core
+description: Helm chart for XZ Swarm Core telemetry cluster
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
