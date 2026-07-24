@@ -88,3 +88,20 @@ def test_api_status_and_consensus_endpoints():
         data = response_consensus.json()
         assert len(data["consensus"]) == 4
         assert np.isclose(data["norm"], 1.0, atol=1e-6)
+
+from agent_core.byzantine_filter import ByzantineFilter
+
+def test_byzantine_node_isolation():
+    """Assert ByzantineFilter detects outlier states exceeding distance threshold."""
+    b_filter = ByzantineFilter(distance_threshold_rad=0.3)
+    consensus = np.array([1.0, 0.0, 0.0, 0.0])
+    
+    nodes = {
+        "node-ok": np.array([0.999, 0.001, 0.0, 0.0]),
+        "node-malicious": np.array([0.0, 1.0, 0.0, 0.0])  # Orthogonal vector (PI rad drift)
+    }
+    
+    valid = b_filter.filter_active_states(nodes, consensus)
+    assert "node-ok" in valid
+    assert "node-malicious" not in valid
+    assert "node-malicious" in b_filter.quarantined_nodes
