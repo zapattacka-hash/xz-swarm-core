@@ -137,3 +137,14 @@ def test_phase3_rate_limiter_audit_and_compression():
     compressed = StateCompressor.compress_quaternion_array(data)
     decompressed = StateCompressor.decompress_quaternion_array(compressed, 1)
     assert np.allclose(data, decompressed)
+
+from math_core.kalman_filter import QuaternionKalmanFilter
+from math_core.wasm_export import export_to_wasm_struct
+
+def test_phase4_kalman_and_wasm():
+    kf = QuaternionKalmanFilter()
+    updated = kf.update(np.array([0.707, 0.707, 0.0, 0.0]))
+    assert np.isclose(np.linalg.norm(updated), 1.0)
+
+    buf = export_to_wasm_struct(updated)
+    assert len(buf) == 16
