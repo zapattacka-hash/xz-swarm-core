@@ -45,3 +45,13 @@ def test_hamiltonian_spin_evolution_norm():
     field = np.array([0.5, -1.2, 0.3])
     evolved = evolve_spinor_state(initial, field, dt=1.5)
     assert np.isclose(np.linalg.norm(evolved), 1.0, atol=1e-6)
+
+from agent_core.async_daemon import AsyncSwarmDaemon
+
+@pytest.mark.asyncio
+async def test_async_daemon_execution_norm():
+    """Assert async daemon runs concurrently and maintains unit norm consensus."""
+    daemon = AsyncSwarmDaemon(tick_interval=0.01)
+    await daemon.run_swarm_simulation(duration_seconds=0.1)
+    consensus = daemon.mesh.compute_mesh_consensus()
+    assert np.isclose(np.linalg.norm(consensus), 1.0, atol=1e-6)
