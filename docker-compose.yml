@@ -1,0 +1,16 @@
+﻿version: '3.8'
+
+services:
+  swarm-core:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: xz-swarm-core-service
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+    environment:
+      - PYTHONUNBUFFERED=1
+      - HDF5_STORE_PATH=/app/data/swarm_telemetry.h5
+    restart: unless-stopped
