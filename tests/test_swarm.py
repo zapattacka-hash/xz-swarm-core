@@ -148,3 +148,14 @@ def test_phase4_kalman_and_wasm():
 
     buf = export_to_wasm_struct(updated)
     assert len(buf) == 16
+
+from math_core.neural_spinor import predict_next_spinor
+from agent_core.reputation_engine import ReputationEngine
+
+def test_phase5_neural_and_reputation():
+    pred = predict_next_spinor(np.array([1.0, 0.0, 0.0, 0.0]), np.array([0.0, 0.0, 0.0, 0.0]))
+    assert np.isclose(np.linalg.norm(pred), 1.0)
+
+    rep = ReputationEngine()
+    rep.update_score("node-test", False)
+    assert rep.scores["node-test"] < 1.0
